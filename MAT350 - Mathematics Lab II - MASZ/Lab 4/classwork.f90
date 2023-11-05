@@ -1,9 +1,9 @@
-program runj_koota
+program euler_modified
 
    implicit none
    real :: t(100), y(100), e(100)
    real :: a = 0.0, b = 2.0, y0 = 0.5
-   real :: h
+   real :: h, k1, k2, k3, k4
    real :: f, act
    integer :: i, n = 10
 
@@ -16,15 +16,19 @@ program runj_koota
    end do
 
    do i = 1, n
-      y(i + 1) = y(i) + h*f(t(i), y(i))
-      y(i + 1) = y(i) + h/2*(f(t(i), y(i)) + f(t(i + 1), y(i + 1)))
+      k1 = h*f(t(i), y(i))
+      k2 = h*f(t(i) + h/2, y(i) + k1/2)
+      k3 = h*f(t(i) + h/2, y(i) + k2/2)
+      k4 = h*f(t(i) + h, y(i) + k3)
+
+      y(i + 1) = y(i) + (k1 + 2*(k2 + k3) + k4)/6
       e(i + 1) = abs(y(i + 1) - act(t(i + 1)))
    end do
 
    do i = 1, n + 1
       write (*, *) t(i), y(i), act(t(i)), e(i)
    end do
-end program runj_koota
+end program euler_modified
 
 function f(t, y)
 
